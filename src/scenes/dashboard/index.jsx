@@ -4,25 +4,30 @@ import { useState } from "react";
 import { default as BarChart } from "../../components/BarChart";
 import { Time, User_Data, mockBarData } from "../../data/mockData";
 import { tokens } from "../../theme";
-//수정저ㅓㅇㅈ렁dfsdfsdf
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
+  // Start1 : 사용자 이름 가져오기
   const user = User_Data.find((user) => user.id === 1);
   const userName = user ? user.name : "사용자 없음";
   const subTitleText = `${userName}님 출근완료 상태입니다`;
+  // End1 : 사용자 이름 가져오기
 
+  // Start2 : 지각 횟수 가져오기
   const userDept = user ? user.dept : "사용자 없음";
   const UseDept = `${userDept}`;
   const userlate = user ? user.worklate : "지각 데이터 없음";
   const UseLate = `${userlate}`;
+  // End2 : 지각 횟수 가져오기
 
+   // Start3 : 사용자인지 관리자인지 판별하기
   const UserOrManagement = User_Data.find((user) => user.userType === "True");
   const UserOrManager = UserOrManagement ? "사용자" : "관리자";
   const userType = `${UserOrManager}`;
+  // End3 : 사용자인지 관리자인지 판별하기
 
-  //근무시간, 연장 근무 시간, 총 근무 시간 계산
+  // Start4 : 근무시간, 연장 근무 시간, 총 근무 시간 계산
   const getWeeklyWorkHours = (workData) => {
     let 기본_근무_시간 = 0;
     let 초과_근무_시간 = 0;
@@ -40,8 +45,10 @@ const Dashboard = () => {
   const [기본_근무_시간, 초과_근무_시간, 외근] =
     getWeeklyWorkHours(mockBarData);
   const 총_근무_시간 = 기본_근무_시간 + 초과_근무_시간 + 외근;
+  // End4 : 근무시간, 연장 근무 시간, 총 근무 시간 계산
 
-  //잔여 연차 사용 연차 계산
+
+  // Start5 : 잔여 연차 사용 연차 계산
   const calculateYears = (joinCompany) => {
     const joinDate = new Date(joinCompany);
     const currentDate = new Date();
@@ -82,23 +89,25 @@ const Dashboard = () => {
     user.calculateYears = Currnetyears;
     user.vacationDays = vacationDays;
   });
-
-  function getNearestMonday() {
+  // End5 : 잔여 연차 사용 연차 계산
+  
+  // Start6 : 차트 위 날짜 구하기
+  function getChartDate() {
     const today = new Date();
     const dayOfWeek = today.getDay();
-    const offset = dayOfWeek === 0 ? 1 : 1 - dayOfWeek;
-    const nearestMonday = new Date(today);
-    nearestMonday.setDate(nearestMonday.getDate() + offset);
-    return nearestMonday;
+    const Day = dayOfWeek === 0 ? 1 : 1 - dayOfWeek;
+    const ChartDate = new Date(today);
+    ChartDate.setDate(ChartDate.getDate() + Day);
+    return ChartDate;
   }
 
-  const nearestMonday = getNearestMonday();
-  const nearestSunday = new Date(nearestMonday);
-  nearestSunday.setDate(nearestSunday.getDate() + 6);
+  const getStartDate = getChartDate();
+  const getEndDate = new Date(getStartDate);
+  getEndDate.setDate(getEndDate.getDate() + 6);
 
   const [currentDates, setcurrentDates] = useState({
-    startDate: nearestMonday,
-    endDate: nearestSunday,
+    startDate: getStartDate,
+    endDate: getEndDate,
   });
 
   const handleButtonClick = (direction) => {
@@ -116,6 +125,7 @@ const Dashboard = () => {
 
     setcurrentDates({ startDate: newStartDate, endDate: newEndDate });
   };
+  // End6 : 차트 위 날짜 구하기
 
   return (
     <Box m="20px">
