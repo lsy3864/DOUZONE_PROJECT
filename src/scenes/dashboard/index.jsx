@@ -1,5 +1,6 @@
 import { CheckCircle } from "@mui/icons-material";
 import { Box, Button, Grid, Typography, useTheme } from "@mui/material";
+import { useState } from "react";
 import { default as BarChart } from "../../components/BarChart";
 import { Time, User_Data, mockBarData } from "../../data/mockData";
 import { tokens } from "../../theme";
@@ -7,7 +8,7 @@ import { tokens } from "../../theme";
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  
+
   const user = User_Data.find((user) => user.id === 1);
   const userName = user ? user.name : "사용자 없음";
   const subTitleText = `${userName}님 출근완료 상태입니다`;
@@ -20,8 +21,6 @@ const Dashboard = () => {
   const UserOrManagement = User_Data.find((user) => user.userType === "True");
   const UserOrManager = UserOrManagement ? "사용자" : "관리자";
   const userType = `${UserOrManager}`;
-  
-
 
   //근무시간, 연장 근무 시간, 총 근무 시간 계산
   const getWeeklyWorkHours = (workData) => {
@@ -38,14 +37,12 @@ const Dashboard = () => {
     return [기본_근무_시간, 초과_근무_시간, 외근];
   };
 
-  const [기본_근무_시간, 초과_근무_시간, 외근] = getWeeklyWorkHours(mockBarData);
+  const [기본_근무_시간, 초과_근무_시간, 외근] =
+    getWeeklyWorkHours(mockBarData);
   const 총_근무_시간 = 기본_근무_시간 + 초과_근무_시간 + 외근;
 
-
-
-
   //잔여 연차 사용 연차 계산
-    const calculateYears = (joinCompany) => {
+  const calculateYears = (joinCompany) => {
     const joinDate = new Date(joinCompany);
     const currentDate = new Date();
     const yearsOfService = currentDate.getFullYear() - joinDate.getFullYear();
@@ -56,43 +53,27 @@ const Dashboard = () => {
   const VacationDate = (calculateYears) => {
     let vacationDays = 0;
 
-    if(calculateYears === 0) {
+    if (calculateYears === 0) {
       vacationDays = 0;
-    }
-
-    else if(calculateYears <=2) {
+    } else if (calculateYears <= 2) {
       vacationDays = 15;
-    }
-
-    else if(calculateYears <=4) {
+    } else if (calculateYears <= 4) {
       vacationDays = 16;
-    }
-
-    else if(calculateYears <= 5) {
+    } else if (calculateYears <= 5) {
       vacationDays = 17;
-    }
-
-    else if(calculateYears <= 7) {
+    } else if (calculateYears <= 7) {
       vacationDays = 18;
-    }
-
-    else if(calculateYears <= 15) {
+    } else if (calculateYears <= 15) {
       vacationDays = 19;
-    }
-
-    else if(calculateYears <= 19) {
+    } else if (calculateYears <= 19) {
       vacationDays = 24;
-    }
-
-    else if(calculateYears <= 21) {
+    } else if (calculateYears <= 21) {
       vacationDays = 25;
-    }
-
-    else if(calculateYears <= 25) {
+    } else if (calculateYears <= 25) {
       vacationDays = 25;
     }
     return vacationDays;
-  }
+  };
 
   User_Data.forEach((user) => {
     const Currnetyears = calculateYears(user.joinCompany);
@@ -105,31 +86,37 @@ const Dashboard = () => {
   function getNearestMonday() {
     const today = new Date();
     const dayOfWeek = today.getDay();
-    
-
+    const offset = dayOfWeek === 0 ? 1 : 1 - dayOfWeek;
+    const nearestMonday = new Date(today);
+    nearestMonday.setDate(nearestMonday.getDate() + offset);
+    return nearestMonday;
   }
 
+  const nearestMonday = getNearestMonday();
+  const nearestSunday = new Date(nearestMonday);
+  nearestSunday.setDate(nearestSunday.getDate() + 6);
 
-  
+  const [currentDates, setcurrentDates] = useState({
+    startDate: nearestMonday,
+    endDate: nearestSunday,
+  });
 
+  const handleButtonClick = (direction) => {
+    const { startDate, endDate } = currentDates;
+    const newStartDate = new Date(startDate);
+    const newEndDate = new Date(endDate);
 
-  
+    if (direction === "prev") {
+      newStartDate.setDate(newStartDate.getDate() - 7);
+      newEndDate.setDate(newEndDate.getDate() - 7);
+    } else if (direction === "next") {
+      newStartDate.setDate(newStartDate.getDate() + 7);
+      newEndDate.setDate(newEndDate.getDate() + 7);
+    }
 
+    setcurrentDates({ startDate: newStartDate, endDate: newEndDate });
+  };
 
- 
-
-
-
-
-
-
-
-
-
-
-
-
-  
   return (
     <Box m="20px">
       <Box
@@ -149,7 +136,9 @@ const Dashboard = () => {
           borderRadius={3}
         >
           <Box>
-            <CheckCircle sx={{ color: colors.greenAccent[600], fontSize: "26px" }} />
+            <CheckCircle
+              sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
+            />
             <Typography variant="h5">{subTitleText}</Typography>
             <Typography>타입 : {userType}</Typography>
             <Typography variant="subtitle2">부서 : {UseDept}</Typography>
@@ -212,22 +201,17 @@ const Dashboard = () => {
                   boxShadow={10}
                   minHeight="120px"
                 >
-                  <Typography 
-                      variant="h5">{`근무 시간 : ${기본_근무_시간.toFixed(1)} 시간`}
+                  <Typography variant="h5">
+                    {`근무 시간 : ${기본_근무_시간.toFixed(1)} 시간`}
                   </Typography>
-
                   &nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
-
-                  <Typography
-                     variant="h5">{`연장 근무 : ${초과_근무_시간.toFixed(1)} 시간`}
+                  <Typography variant="h5">
+                    {`연장 근무 : ${초과_근무_시간.toFixed(1)} 시간`}
                   </Typography>
-
                   &nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;
-
-                  <Typography 
-                     variant="h5">{`총 근무 시간 : ${총_근무_시간.toFixed(1)} 시간`}
-                 </Typography>
-                 
+                  <Typography variant="h5">
+                    {`총 근무 시간 : ${총_근무_시간.toFixed(1)} 시간`}
+                  </Typography>
                 </Box>
               </Grid>
             </Grid>
@@ -259,7 +243,8 @@ const Dashboard = () => {
                   minHeight="120px"
                 >
                   <Typography variant="h5" color="text.primary">
-                    {user.calculateYears} 사용연차 / {user.vacationDays} 남은연차
+                    {user.calculateYears} 사용연차 / {user.vacationDays}{" "}
+                    남은연차
                   </Typography>
                 </Box>
               </Grid>
@@ -284,7 +269,6 @@ const Dashboard = () => {
           </Box>
         </Box>
 
-        
         {/* 차트 영역 구현 */}
         <Box
           gridColumn="span 10"
@@ -292,7 +276,7 @@ const Dashboard = () => {
           backgroundColor={colors.primary[400]}
           borderRadius={3}
         >
-         <Box
+          <Box
             mt="25px"
             p="10px 30px"
             display="flex"
@@ -315,7 +299,13 @@ const Dashboard = () => {
               width="50%" // 자신의 넓이를 50%로 설정합니다.
               textAlign="left" // 왼쪽 정렬로 설정합니다.
             >
-              7월 11일 ~ 7월 17일
+              <div>
+                <button onClick={() => handleButtonClick("prev")}>{"<"}</button>
+                  {currentDates.startDate.toLocaleDateString()}{" ~ "}
+                  {currentDates.endDate.toLocaleDateString()}
+                <button onClick={() => handleButtonClick("next")}>{">"}</button>
+                
+              </div>
             </Typography>
           </Box>
 
@@ -325,9 +315,6 @@ const Dashboard = () => {
             <BarChart isDashboard={true} />
           </Box>
         </Box>
-
-
-
 
         <Box
           gridColumn="span 2"
@@ -353,13 +340,13 @@ const Dashboard = () => {
             >
               시간
             </Typography>
-            
+
             <Typography
               alignItems="center"
               color={colors.grey[100]}
               variant="h5"
               fontWeight="600"
-              >
+            >
               스케줄
             </Typography>
 
@@ -373,7 +360,7 @@ const Dashboard = () => {
             </Typography>
           </Box>
           {/* 여기는 차트 오른쪽 부분 */}
-          
+
           {Time.map((TimeTable, i) => (
             <Box
               key={`${TimeTable.Time}-${i}`}
@@ -393,55 +380,52 @@ const Dashboard = () => {
                 </Typography>
                 <Typography color={colors.grey[100]}></Typography>
               </Box>
-            {/* 스케쥴 구간 */}
-              <Box color={colors.grey[100]}>{TimeTable.Schedule}
-                   
-              </Box>
+              {/* 스케쥴 구간 */}
+              <Box color={colors.grey[100]}>{TimeTable.Schedule}</Box>
 
-            <select
-              style={{
-                backgroundColor: "white",
-                border: "none",
-                borderRadius: "10px",
-                padding: "1px 10px",
-                color: "black",
-                fontSize: "16px",
-                cursor: "pointer",
-              }}
-            >
-              <option
-                value="option1"
+              <select
                 style={{
-                  color: "red",
+                  backgroundColor: "white",
+                  border: "none",
+                  borderRadius: "10px",
+                  padding: "1px 10px",
+                  color: "black",
+                  fontSize: "16px",
+                  cursor: "pointer",
                 }}
               >
-                예정
-              </option>
+                <option
+                  value="option1"
+                  style={{
+                    color: "red",
+                  }}
+                >
+                  예정
+                </option>
 
-              <option
-                value="option2"
-                style={{
-                  color: "blue",
-                }}
-              >
-                보류
-              </option>
+                <option
+                  value="option2"
+                  style={{
+                    color: "blue",
+                  }}
+                >
+                  보류
+                </option>
 
-              <option
-                value="option3"
-                style={{
-                  color: "green",
-                }}
-              >
-                완료
-              </option>
-            </select>
-          </Box>
-        ))}
+                <option
+                  value="option3"
+                  style={{
+                    color: "green",
+                  }}
+                >
+                  완료
+                </option>
+              </select>
+            </Box>
+          ))}
+        </Box>
       </Box>
     </Box>
-    </Box>
-    
   );
 };
 
