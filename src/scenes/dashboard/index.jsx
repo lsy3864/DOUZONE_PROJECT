@@ -3,7 +3,7 @@ import { Box, Button, Grid, Typography, useTheme } from "@mui/material";
 import { default as BarChart } from "../../components/BarChart";
 import { Time, User_Data, mockBarData } from "../../data/mockData";
 import { tokens } from "../../theme";
-//수정저ㅓㅇㅈ렁
+//수정저ㅓㅇㅈ렁dfsdfsdf
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
