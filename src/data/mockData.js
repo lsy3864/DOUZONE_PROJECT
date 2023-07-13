@@ -99,52 +99,107 @@ export const mockBarData = [
 ];
 
 
-// ************************************************일정 데이터
+// ************************************************출퇴근 기록
 export const Time = [
   {
-    Time : "09:00 ~ 10:00",
+    Time : "2023.07.01",
     Schedule : "오전 미팅",
     State : "완료"
   },
   {
-    Time : "10:00 ~ 11:00",
+    Time : "2023.07.02",
     Schedule : "오전 미팅",
     State : "완료"
   },
   {
-    Time : "11:00 ~ 12:00",
+    Time : "2023.07.03",
     Schedule : "오전 미팅",
     State : "완료"
   },
   {
-    Time : "12:00 ~ 13:00",
+    Time : "2023.07.04",
     Schedule : "점심 시간",
     State : "완료"
   },
   {
-    Time : "13:00 ~ 14:00",
+    Time : "2023.07.05",
     Schedule : "오후 거래처 미팅",
     State : "완료"
   },
   {
-    Time : "14:00 ~ 15:00",
+    Time : "2023.07.06",
     Schedule : "",
     State : ""
   },
   {
-    Time : "15:00 ~ 16:00",
+    Time : "2023.07.07",
     Schedule : "결산 관리",
     State : "예정"
   },
 
   {
-    Time : "16:00 ~ 17:00",
+    Time : "2023.07.08",
     Schedule : "휴가 신청",
     State : "예정"
   },
 
   {
-    Time : "17:00 ~ 18:00",
+    Time : "2023.07.09",
+    Schedule : "퇴근",
+    State : "예정"
+  },
+  {
+    Time : "2023.07.10",
+    Schedule : "퇴근",
+    State : "예정"
+  },
+  {
+    Time : "2023.07.11",
+    Schedule : "퇴근",
+    State : "예정"
+  },
+  {
+    Time : "2023.07.12",
+    Schedule : "퇴근",
+    State : "예정"
+  },
+  {
+    Time : "2023.07.13",
+    Schedule : "퇴근",
+    State : "예정"
+  },
+  {
+    Time : "2023.07.14",
+    Schedule : "퇴근",
+    State : "예정"
+  },
+  {
+    Time : "2023.07.15",
+    Schedule : "퇴근",
+    State : "예정"
+  },
+  {
+    Time : "2023.07.16",
+    Schedule : "퇴근",
+    State : "예정"
+  },
+  {
+    Time : "2023.07.17",
+    Schedule : "퇴근",
+    State : "예정"
+  },
+  {
+    Time : "2023.07.18",
+    Schedule : "퇴근",
+    State : "예정"
+  },
+  {
+    Time : "2023.07.19",
+    Schedule : "퇴근",
+    State : "예정"
+  },
+  {
+    Time : "2023.07.20",
     Schedule : "퇴근",
     State : "예정"
   },

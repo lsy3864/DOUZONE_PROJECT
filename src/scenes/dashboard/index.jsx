@@ -127,6 +127,16 @@ const Dashboard = () => {
   };
   // End6 : 차트 위 날짜 구하기
 
+  // Start7 : 오늘 가서 할 것 ! 요일 구하기
+  const[Day, setDay] = useState();
+
+  const  whatDay = new Date();
+  const day = whatDay.getDay();
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  setDay(days[day]);
+
+  
+
   return (
     <Box m="20px">
       <Box
@@ -281,7 +291,7 @@ const Dashboard = () => {
 
         {/* 차트 영역 구현 */}
         <Box
-          gridColumn="span 10"
+          gridColumn="span 8"
           gridRow="span 3"
           backgroundColor={colors.primary[400]}
           borderRadius={3}
@@ -327,12 +337,13 @@ const Dashboard = () => {
         </Box>
 
         <Box
-          gridColumn="span 2"
+          gridColumn="span 4"
           gridRow="span 3"
           backgroundColor={colors.primary[400]}
           overflow="auto"
           height="100%"
           width="100%"
+          borderRadius= "10px"
         >
           <Box
             display="flex"
@@ -348,16 +359,34 @@ const Dashboard = () => {
               variant="h5"
               fontWeight="600"
             >
-              시간
+              일자
             </Typography>
 
             <Typography
-              alignItems="center"
+              pl = "40px"
               color={colors.grey[100]}
               variant="h5"
               fontWeight="600"
             >
-              스케줄
+              요일
+            </Typography>
+
+            <Typography
+              pr="30px"
+              color={colors.grey[100]}
+              variant="h5"
+              fontWeight="600"
+            >
+              출근 시각
+            </Typography>
+
+            <Typography
+              pr="30px"
+              color={colors.grey[100]}
+              variant="h5"
+              fontWeight="600"
+            >
+              퇴근시각
             </Typography>
 
             <Typography
@@ -368,6 +397,8 @@ const Dashboard = () => {
             >
               상태
             </Typography>
+
+
           </Box>
           {/* 여기는 차트 오른쪽 부분 */}
 
